@@ -39,7 +39,7 @@ uint8_t i2cData[14]; // Buffer for I2C data
 // TODO: Make calibration routine
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Wire.begin();
   laser_35_dollars_init();
 //  Rak_Serial_init();

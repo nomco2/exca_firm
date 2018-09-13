@@ -1,5 +1,5 @@
 #include <SoftwareSerial.h>
-SoftwareSerial laser_35_dollars(11, 10);
+SoftwareSerial laser_35_dollars(10, 11);
 
 
 

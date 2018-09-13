@@ -69,12 +69,28 @@ void D_processing(){
       D = false;
       laser_data_int = data_string.toInt();
       data_string = "";
-      Serial.print("distance:");
+      String Quotes = "'";
+      Serial.print("[{");
+      Serial.print(Quotes);
+      Serial.print("distance");
+      Serial.print(Quotes);
+      Serial.print(":");
       Serial.print(laser_data_int);
-      Serial.print(" /angle:");
+
+      Serial.print(",");
+      Serial.print(Quotes);
+      Serial.print("angle");
+      Serial.print(Quotes);
+      Serial.print(":");
       Serial.print(kalAngleY);
-      Serial.print(" /height:");
+
+      Serial.print(",");
+      Serial.print(Quotes);
+      Serial.print("height");
+      Serial.print(Quotes);
+      Serial.print(":");
       Serial.println(height_calculation);
+      Serial.print("}]");
     }    
     if(D && data != '.'){
       data_string += data;
@@ -105,7 +121,9 @@ void laser_35_dollars_loop(){
   }
   if (Serial.available()) {
 //    laser_35_dollars.write(Serial.read());
-      serial_read_processing_to_divided_mode(Serial.read());
+      char a = Serial.read();
+      Serial.print(a);
+      serial_read_processing_to_divided_mode(a);
   }
 
 
