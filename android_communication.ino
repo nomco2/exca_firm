@@ -8,8 +8,7 @@ void cos_amend_value_init(){
 
 void receive_laser_data(){
   laser_35_dollars_loop();
-      height_calculation = int(cos(abs(kalAngleY)*cos_amend_value) * laser_data_int);
-
+  height_calculation = int(cos(abs(kalAngleY)*cos_amend_value) * laser_data_int);
 }
 
 
@@ -48,6 +47,46 @@ void serial_read_processing_to_divided_mode(char read_data){
 //        Serial.println(cos_amend_value);
 
     break;
+
+    /*motor control */
+    case 'm':
+      char motor_direction = Serial.read();
+      switch(motor_direction){
+        case '0':
+          digitalWrite(2, true);
+          digitalWrite(4, true);
+          digitalWrite(5, true);
+          digitalWrite(7, true);
+          Serial.print("0");
+          break;
+        case '1':
+          Motor_operation(255,true,255,true);
+          Serial.print("1");
+
+          break;
+        case '2':
+          Motor_operation(255,true,255,true);
+          break;
+        case '3':
+          Motor_operation(255,true,255,true);
+          break;
+        case '4':
+          Motor_operation(255,true,255,true);
+          break;
+        case '5':
+          Motor_operation(255,true,255,true);
+          break;
+        case '6':
+          Motor_operation(255,true,255,true);
+          break;
+        case '7':
+          Motor_operation(255,true,255,true);
+          break;
+        case '8':
+          Motor_operation(255,true,255,true);
+          break;
+      }
+      break;
 
 
       
@@ -114,15 +153,16 @@ void laser_35_dollars_loop(){
     
   }else{
         if(continue_or_not){
-          delay(10);
+          delay(100);
           laser_35_dollars.write('D');
 //          Serial.println("d send");
         }
   }
+  
   if (Serial.available()) {
 //    laser_35_dollars.write(Serial.read());
       char a = Serial.read();
-      Serial.print(a);
+//      Serial.print(a);
       serial_read_processing_to_divided_mode(a);
   }
 

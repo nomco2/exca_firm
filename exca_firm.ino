@@ -43,6 +43,7 @@ void setup() {
   Wire.begin();
   laser_35_dollars_init();
 //  Rak_Serial_init();
+  motor_init();
   
   TWBR = ((F_CPU / 400000L) - 16) / 2; // Set I2C frequency to 400kHz
 
