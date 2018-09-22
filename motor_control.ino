@@ -13,6 +13,12 @@ void motor_init(){
   pinMode(motor_2_in1, OUTPUT);
   pinMode(motor_2_in2, OUTPUT);
   pinMode(enable2, OUTPUT);
+
+  digitalWrite(2, true);
+  digitalWrite(4, true);
+  digitalWrite(5, true);
+  digitalWrite(7, true);
+  
 }
 
 void Motor_operation(int speed1, boolean reverse1, int speed2, boolean reverse2)
@@ -24,5 +30,12 @@ void Motor_operation(int speed1, boolean reverse1, int speed2, boolean reverse2)
   digitalWrite(motor_2_in1, reverse2);
   digitalWrite(motor_2_in2, ! reverse2);
 //  Serial.println(speed1 & ':' & speed2);
+  if(speed1 == 0){
+    digitalWrite(motor_1_in1, true);
+    digitalWrite(motor_1_in2, true);
+  }else if(speed2 == 0){
+    digitalWrite(motor_2_in1, true);
+    digitalWrite(motor_2_in2, true);
+  }
 
 }

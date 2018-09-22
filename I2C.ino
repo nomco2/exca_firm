@@ -22,6 +22,9 @@ uint8_t i2cWrite(uint8_t registerAddress, uint8_t data, bool sendStop) {
   return i2cWrite(registerAddress, &data, 1, sendStop); // Returns 0 on success
 }
 
+//void(*resetFunc) (void) = 0;
+
+
 uint8_t i2cWrite(uint8_t registerAddress, uint8_t *data, uint8_t length, bool sendStop) {
   Wire.beginTransmission(IMUAddress);
   Wire.write(registerAddress);
@@ -30,9 +33,16 @@ uint8_t i2cWrite(uint8_t registerAddress, uint8_t *data, uint8_t length, bool se
   if (rcode) {
     Serial.print(F("i2cWrite failed: "));
     Serial.println(rcode);
+    Serial.println("err 1");
+//    resetFunc();
+//    delay(1000);
+    pinMode(9, OUTPUT);
+    digitalWrite(9, HIGH);
   }
   return rcode; // See: http://arduino.cc/en/Reference/WireEndTransmission
 }
+
+
 
 uint8_t i2cRead(uint8_t registerAddress, uint8_t *data, uint8_t nbytes) {
   uint32_t timeOutTimer;
@@ -42,6 +52,11 @@ uint8_t i2cRead(uint8_t registerAddress, uint8_t *data, uint8_t nbytes) {
   if (rcode) {
     Serial.print(F("i2cRead failed: "));
     Serial.println(rcode);
+    Serial.println("err 2");
+//    resetFunc();
+//    delay(1000);
+    pinMode(9, OUTPUT);
+    digitalWrite(9, HIGH);
     return rcode; // See: http://arduino.cc/en/Reference/WireEndTransmission
   }
   Wire.requestFrom(IMUAddress, nbytes, (uint8_t)true); // Send a repeated start and then release the bus after reading
@@ -55,9 +70,19 @@ uint8_t i2cRead(uint8_t registerAddress, uint8_t *data, uint8_t nbytes) {
         data[i] = Wire.read();
       else {
         Serial.println(F("i2cRead timeout"));
+        Serial.println("err 3");
         return 5; // This error value is not already taken by endTransmission
+        
+//        resetFunc();
+//        delay(1000);
+        pinMode(9,
+OUTPUT);
+        digitalWrite(9, HIGH);
       }
     }
   }
   return 0; // Success
 }
+
+
+

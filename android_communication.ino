@@ -41,49 +41,64 @@ void serial_read_processing_to_divided_mode(char read_data){
         Serial.readBytes(data, sizeof(data));
         EEPROMWrite_int(1,atoi(data));
         cos_amend_value = (float)EEPROMRead_int(1)/(float)100;
-        Serial.println(cos_amend_value);
-
-//        cos_amend_value = (float)EEPROMRead_int(1)/(float)100;
 //        Serial.println(cos_amend_value);
 
+        String json_name[1] = {"amend_value"};
+        String json_int[1];
+        json_int[0] = String(cos_amend_value);
+        Serial.println(json_maker(json_name, json_int));
+
+
     break;
+
+    case 'R': 
+        cos_amend_value = (float)EEPROMRead_int(1)/(float)100;
+        
+        String json_name[1] = {"amend_value"};
+        String json_int[1];
+        json_int[0] = String(cos_amend_value);
+        Serial.println(json_maker(json_name, json_int));
+
+    break;
+    
 
     /*motor control */
     case 'm':
       char motor_direction = Serial.read();
+      int ms = 180; //motor speed
       switch(motor_direction){
         case '0':
           digitalWrite(2, true);
           digitalWrite(4, true);
           digitalWrite(5, true);
           digitalWrite(7, true);
-          Serial.print("0");
+//          Serial.print("0");
           break;
-        case '1':
-          Motor_operation(255,true,255,true);
-          Serial.print("1");
+          
+        case '1': //left_up
+          Motor_operation(ms,false,ms,false);
+          break;
+        case '2': //middle_up
+          Motor_operation(ms,false,0,true);
+          break;
+        case '3'://right_up
+          Motor_operation(ms,false,ms,true);
+          break;
+        case '4'://left
+          Motor_operation(0,true,ms,false);
+          break;
 
+        case '6'://right
+          Motor_operation(0,true,ms,true);
           break;
-        case '2':
-          Motor_operation(255,true,255,true);
+        case '7'://left_down
+          Motor_operation(ms,true,ms,false);
           break;
-        case '3':
-          Motor_operation(255,true,255,true);
+        case '8'://middle_down
+          Motor_operation(ms,true,0,true);
           break;
-        case '4':
-          Motor_operation(255,true,255,true);
-          break;
-        case '5':
-          Motor_operation(255,true,255,true);
-          break;
-        case '6':
-          Motor_operation(255,true,255,true);
-          break;
-        case '7':
-          Motor_operation(255,true,255,true);
-          break;
-        case '8':
-          Motor_operation(255,true,255,true);
+        case '9'://right_down
+          Motor_operation(ms,true,ms,true);
           break;
       }
       break;
@@ -107,29 +122,36 @@ void D_processing(){
     }else if(data == 'm'){
       D = false;
       laser_data_int = data_string.toInt();
-      data_string = "";
-      String Quotes = "'";
-      Serial.print("[{");
-      Serial.print(Quotes);
-      Serial.print("distance");
-      Serial.print(Quotes);
-      Serial.print(":");
-      Serial.print(laser_data_int);
+//      data_string = "";
+//      String Quotes = "'";
+//      Serial.print("[{");
+//      Serial.print(Quotes);
+//      Serial.print("distance");
+//      Serial.print(Quotes);
+//      Serial.print(":");
+//      Serial.print(laser_data_int);
+//
+//      Serial.print(",");
+//      Serial.print(Quotes);
+//      Serial.print("angle");
+//      Serial.print(Quotes);
+//      Serial.print(":");
+//      Serial.print(kalAngleY);
+//
+//      Serial.print(",");
+//      Serial.print(Quotes);
+//      Serial.print("height");
+//      Serial.print(Quotes);
+//      Serial.print(":");
+//      Serial.println(height_calculation);
+//      Serial.print("}]");
 
-      Serial.print(",");
-      Serial.print(Quotes);
-      Serial.print("angle");
-      Serial.print(Quotes);
-      Serial.print(":");
-      Serial.print(kalAngleY);
-
-      Serial.print(",");
-      Serial.print(Quotes);
-      Serial.print("height");
-      Serial.print(Quotes);
-      Serial.print(":");
-      Serial.println(height_calculation);
-      Serial.print("}]");
+      String json_name[3] = {"distance", "angle", "height"};
+      String json_int[3];
+      json_int[0] = String(laser_data_int);
+      json_int[1] = String(kalAngleY);
+      json_int[2] = String(height_calculation);
+      Serial.println(json_maker(json_name, json_int));
     }    
     if(D && data != '.'){
       data_string += data;
