@@ -14,7 +14,8 @@ void receive_laser_data(){
 
 
 void serial_read_processing_to_divided_mode(char read_data){
-  
+  String json_name = "amend_value";
+  String json_int;
   switch(read_data){
     case 'd':
       continue_or_not = true;
@@ -40,13 +41,13 @@ void serial_read_processing_to_divided_mode(char read_data){
         char data[3];
         Serial.readBytes(data, sizeof(data));
         EEPROMWrite_int(1,atoi(data));
+        delay(100);
         cos_amend_value = (float)EEPROMRead_int(1)/(float)100;
 //        Serial.println(cos_amend_value);
 
-        String json_name[1] = {"amend_value"};
-        String json_int[1];
-        json_int[0] = String(cos_amend_value);
-        Serial.println(json_maker(json_name, json_int));
+        
+        json_int = String((float)atoi(data)/(float)100);
+        Serial.println(json_maker(&json_name, &json_int));
 
 
     break;
@@ -54,10 +55,8 @@ void serial_read_processing_to_divided_mode(char read_data){
     case 'R': 
         cos_amend_value = (float)EEPROMRead_int(1)/(float)100;
         
-        String json_name[1] = {"amend_value"};
-        String json_int[1];
-        json_int[0] = String(cos_amend_value);
-        Serial.println(json_maker(json_name, json_int));
+        json_int = String(cos_amend_value);
+        Serial.println(json_maker(&json_name, &json_int));
 
     break;
     
@@ -122,7 +121,7 @@ void D_processing(){
     }else if(data == 'm'){
       D = false;
       laser_data_int = data_string.toInt();
-//      data_string = "";
+      data_string = "";
 //      String Quotes = "'";
 //      Serial.print("[{");
 //      Serial.print(Quotes);
@@ -146,11 +145,12 @@ void D_processing(){
 //      Serial.println(height_calculation);
 //      Serial.print("}]");
 
-      String json_name[3] = {"distance", "angle", "height"};
-      String json_int[3];
+      String json_name[4] = {"distance", "angle1", "angle2", "height"};
+      String json_int[4];
       json_int[0] = String(laser_data_int);
-      json_int[1] = String(kalAngleY);
-      json_int[2] = String(height_calculation);
+      json_int[1] = String(kalAngleX);
+      json_int[2] = String(kalAngleY);
+      json_int[3] = String(height_calculation);
       Serial.println(json_maker(json_name, json_int));
     }    
     if(D && data != '.'){
