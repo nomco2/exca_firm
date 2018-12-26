@@ -1,5 +1,5 @@
 #include "eeprom.h"
-
+#include "auto_linear_scanning.h"
 
 
 void cos_amend_value_init() {
@@ -105,6 +105,18 @@ void serial_read_processing_to_divided_mode(char read_data) {
       }
       break;
 
+    //자동 스캔 명령
+    case 'a':
+      continue_or_not = true;
+      char scan_direction = Serial.read();
+      char scanning_angle = Serial.read();
+      if(scan_direction = '+'){
+        user_select_scanning_angle = int(scanning_angle);
+      }else if(scan_direction = '-'){
+        user_select_scanning_angle = (-1) * int(scanning_angle);
+      }
+      
+      break;
 
 
 
@@ -125,28 +137,6 @@ void D_processing() {
     D = false;
     laser_data_int = data_string.toInt();
     data_string = "";
-    //      String Quotes = "'";
-    //      Serial.print("[{");
-    //      Serial.print(Quotes);
-    //      Serial.print("distance");
-    //      Serial.print(Quotes);
-    //      Serial.print(":");
-    //      Serial.print(laser_data_int);
-    //
-    //      Serial.print(",");
-    //      Serial.print(Quotes);
-    //      Serial.print("angle");
-    //      Serial.print(Quotes);
-    //      Serial.print(":");
-    //      Serial.print(kalAngleY);
-    //
-    //      Serial.print(",");
-    //      Serial.print(Quotes);
-    //      Serial.print("height");
-    //      Serial.print(Quotes);
-    //      Serial.print(":");
-    //      Serial.println(height_calculation);
-    //      Serial.print("}]");
 
     String json_name[4] = {"distance", "angle1", "angle2", "height"};
     String json_int[4];
@@ -165,6 +155,9 @@ void D_processing() {
 
     }
   }
+  if (data == 'E') {
+    laser_error_check_times++; //오류 횟수 저장
+  }
 
 
 }
@@ -173,9 +166,11 @@ void D_processing() {
 
 void laser_35_dollars_loop() {
   if (laser_35_dollars.available()) {
-
-    D_processing();  //result is saved the data_int
-
+    if(is_auto_scanning_start){
+      auto_scanning(); //오토 스캔 기능 부여 받으면
+    }else{
+      D_processing();  //result is saved the data_int
+    }
   } else {
     if (continue_or_not) {
       delay(100);
@@ -191,9 +186,9 @@ void laser_35_dollars_loop() {
     serial_read_processing_to_divided_mode(a);
   }
 
-  if ((millis() - Motor_control_Millis) > 300000 && continue_or_not) {
+  if ((millis() - Motor_control_Millis) > 300000 && continue_or_not && !is_auto_scanning_start ) { // 5분 이상 컨트롤 없으면 레이저 종료
     continue_or_not = false;
-    
+
     String json_name[4] = {"distance", "angle1", "angle2", "height"};
     String json_int[4];
     json_int[0] = "-1";
@@ -202,6 +197,7 @@ void laser_35_dollars_loop() {
     json_int[3] = "0";
     Serial.println(json_maker(json_name, json_int));
   }
+  
 
 
 }

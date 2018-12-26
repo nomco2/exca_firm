@@ -55,7 +55,7 @@ uint8_t i2cRead(uint8_t registerAddress, uint8_t *data, uint8_t nbytes) {
     Serial.println("err 2");
 //    resetFunc();
 //    delay(1000);
-    pinMode(9, OUTPUT);
+    pinMode(9, OUTPUT);//아두이노 리셋
     digitalWrite(9, HIGH);
     return rcode; // See: http://arduino.cc/en/Reference/WireEndTransmission
   }
@@ -75,14 +75,10 @@ uint8_t i2cRead(uint8_t registerAddress, uint8_t *data, uint8_t nbytes) {
         
 //        resetFunc();
 //        delay(1000);
-        pinMode(9,
-OUTPUT);
+        pinMode(9,OUTPUT);
         digitalWrite(9, HIGH);
       }
     }
   }
   return 0; // Success
 }
-
-
-
