@@ -67,7 +67,7 @@ void serial_read_processing_to_divided_mode(char read_data) {
     case 'm':
       Motor_control_Millis = millis();
       char motor_direction = Serial.read();
-      int ms = 180; //motor speed
+      int ms = 180;
       switch (motor_direction) {
         case '0':
           digitalWrite(2, true);
