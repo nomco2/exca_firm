@@ -17,6 +17,8 @@ unsigned long Motor_control_Millis = 0; //시간이 1분 지나면 자동으로 
 void serial_read_processing_to_divided_mode(char read_data) {
   String json_name = "amend_value";
   String json_int;
+  char motor_direction;
+  int ms = 180;
   switch (read_data) {
     case 'd':
       continue_or_not = true;
@@ -66,8 +68,8 @@ void serial_read_processing_to_divided_mode(char read_data) {
     /*motor control */
     case 'm':
       Motor_control_Millis = millis();
-      char motor_direction = Serial.read();
-      int ms = 180;
+      motor_direction = Serial.read();
+
       switch (motor_direction) {
         case '0':
           digitalWrite(2, true);
@@ -107,15 +109,20 @@ void serial_read_processing_to_divided_mode(char read_data) {
 
     //자동 스캔 명령
     case 'a':
-      continue_or_not = true;
+      Serial.println("a read");
       char scan_direction = Serial.read();
       char scanning_angle = Serial.read();
-      if(scan_direction = '+'){
+
+      if (scan_direction = 'h') {
         user_select_scanning_angle = int(scanning_angle);
-      }else if(scan_direction = '-'){
+        Serial.println(user_select_scanning_angle);
+
+      } else if (scan_direction = 'l') {
         user_select_scanning_angle = (-1) * int(scanning_angle);
+        Serial.println(user_select_scanning_angle);
+
       }
-      
+
       break;
 
 
@@ -166,11 +173,11 @@ void D_processing() {
 
 void laser_35_dollars_loop() {
   if (laser_35_dollars.available()) {
-    if(is_auto_scanning_start){
-      auto_scanning(); //오토 스캔 기능 부여 받으면
-    }else{
-      D_processing();  //result is saved the data_int
-    }
+    //    if(is_auto_scanning_start){
+    //      auto_scanning(); //오토 스캔 기능 부여 받으면
+    //    }else{
+    D_processing();  //result is saved the data_int
+    //    }
   } else {
     if (continue_or_not) {
       delay(100);
@@ -197,7 +204,7 @@ void laser_35_dollars_loop() {
     json_int[3] = "0";
     Serial.println(json_maker(json_name, json_int));
   }
-  
+
 
 
 }
