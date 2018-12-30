@@ -22,11 +22,15 @@ void serial_read_processing_to_divided_mode(char read_data) {
   switch (read_data) {
     case 'd':
       continue_or_not = true;
+      is_auto_scanning_start = false;
       laser_35_dollars.write('D');
       Motor_control_Millis = millis();
+      laser_measuring_times = -1;
       break;
     case 'x':
       continue_or_not = false;
+      is_auto_scanning_start = false;
+
       break;
 
     case 'o':
@@ -109,19 +113,13 @@ void serial_read_processing_to_divided_mode(char read_data) {
 
     //자동 스캔 명령
     case 'a':
-      Serial.println("a read");
-      char scan_direction = Serial.read();
-      char scanning_angle = Serial.read();
+      angle_term = Serial.read();
+      laser_measuring_times = 0;
+      laser_error_check_times = 0;
+      continue_or_not = true;
+      is_auto_scanning_start = true;
+      //          auto_scan_motor_controler(angle_term);//모터 움직여서 각도 맞추기 -> while로 맞출때까지 무한 반복
 
-      if (scan_direction = 'h') {
-        user_select_scanning_angle = int(scanning_angle);
-        Serial.println(user_select_scanning_angle);
-
-      } else if (scan_direction = 'l') {
-        user_select_scanning_angle = (-1) * int(scanning_angle);
-        Serial.println(user_select_scanning_angle);
-
-      }
 
       break;
 
@@ -145,13 +143,16 @@ void D_processing() {
     laser_data_int = data_string.toInt();
     data_string = "";
 
-    String json_name[4] = {"distance", "angle1", "angle2", "height"};
-    String json_int[4];
+    String json_name[5] = {"distance", "angle1", "angle2", "height", "measuring_time"};
+    String json_int[5];
     json_int[0] = String(laser_data_int);
     json_int[1] = String(kalAngleX);
     json_int[2] = String(kalAngleY);
     json_int[3] = String(height_calculation);
+    json_int[4] = String(laser_measuring_times);
+
     Serial.println(json_maker(json_name, json_int));
+    auto_scanning();
   }
   if (D && data != '.') {
     data_string += data;
@@ -173,9 +174,9 @@ void D_processing() {
 
 void laser_35_dollars_loop() {
   if (laser_35_dollars.available()) {
-    //    if(is_auto_scanning_start){
+    //    if (is_auto_scanning_start) {
     //      auto_scanning(); //오토 스캔 기능 부여 받으면
-    //    }else{
+    //    } else {
     D_processing();  //result is saved the data_int
     //    }
   } else {
