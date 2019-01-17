@@ -16,8 +16,8 @@ void motor_init(){
 
   digitalWrite(2, true);
   digitalWrite(4, true);
-  digitalWrite(5, true);
-  digitalWrite(7, true);
+//  digitalWrite(5, true);
+//  digitalWrite(7, true);
   
 }
 

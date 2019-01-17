@@ -5,32 +5,32 @@ char angle_term;
 
 
 void auto_scan_motor_controler() {
-  int motor_speed = 200;
+  int motor_speed = 255;
 
   switch (angle_term) {
     case '1':
       Motor_operation(motor_speed, false, 0, false); //아래로 5도
-      delay(120);
+      delay(50);
       break;
     case '2':
       Motor_operation(motor_speed, false, 0, false); //아래로 3도
-      delay(70);
+      delay(30);
       break;
     case '3':
       Motor_operation(motor_speed, false, 0, false); //아래로 1도
-      delay(30);
+      delay(15);
       break;
     case '4':
       Motor_operation(motor_speed, true, 0, false); //위로 1도 
-      delay(30);
+      delay(15);
       break;
     case '5':
       Motor_operation(motor_speed, true, 0, false); //위로 3도 
-      delay(70);
+      delay(30);
       break;
     case '6':
       Motor_operation(motor_speed, true, 0, false); //위로 5도 
-      delay(120);
+      delay(50);
       break;
   }
 
