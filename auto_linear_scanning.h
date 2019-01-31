@@ -2,6 +2,7 @@ boolean is_auto_scanning_start = false;
 int laser_measuring_times = -1;
 int laser_error_check_times;
 char angle_term;
+char how_many_point;
 
 
 void auto_scan_motor_controler() {
@@ -45,7 +46,7 @@ void auto_scanning() {
   if (is_auto_scanning_start) {
 
     laser_measuring_times++;//1회를 늘림
-    
+    int times = int(how_many_point) - 48;
     if (laser_measuring_times > 2) { //3회 측정 후
       laser_measuring_times = 0;
       laser_error_check_times = 0;

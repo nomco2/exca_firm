@@ -114,6 +114,7 @@ void serial_read_processing_to_divided_mode(char read_data) {
     //자동 스캔 명령
     case 'a':
       angle_term = Serial.read();
+//      how_many_point = Serial.read(); 
       laser_measuring_times = 0;
       laser_error_check_times = 0;
       continue_or_not = true;
